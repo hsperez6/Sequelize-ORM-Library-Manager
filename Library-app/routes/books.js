@@ -25,89 +25,20 @@ router.get('/', asyncHandler(async (req, res, next) => {
 
 
 /* GET books/new shows create new book form*/
-router.get('./books/new', (req, res) => {
-  res.render('new-book', {});
+router.get('/new', (req, res) => {
+  res.render('new-book', { book: {}});
 });
 
 
 /* POST books/new Posts a new book to the database */
-router.post('/', asyncHandler(async (req, res, next) => {
-  let book;
-  try {
-    book = await Book.create(req.body);
-    res.redirect("/books/" + article.id);
-  } catch (error) {
-    if(error.name === "SequelizeValidationError") { // checking the error
-      article = await Article.build(req.body);
-      res.render("articles/new", { article, errors: error.errors, title: "New Article" })
-    } else {
-      throw error;
-    }  
-}));
+router.post('/new', asyncHandler(async (req, res, next) => {
+  // let book;
+  let book = await Book.create(req.body);
+  res.redirect('/')
 
-/* POST create article. 
-router.post('/', asyncHandler(async (req, res) => {
-  let article;
-  try {
-    article = await Article.create(req.body);
-    res.redirect("/articles/" + article.id);
-  } catch (error) {
-    if(error.name === "SequelizeValidationError") { // checking the error
-      article = await Article.build(req.body);
-      res.render("articles/new", { article, errors: error.errors, title: "New Article" })
-    } else {
-      throw error;
-    }  
-  };
 }));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
-/* GET articles listing.
-router.get('/', asyncHandler(async (req, res) => {
-  const articles = await Article.findAll({ order: [['createdAt', 'DESC']] });
-  res.render("articles/index", { articles, title: "Sequelize-It!" });
-}));
-
-/* Create a new article form. 
-router.get('/new', (req, res) => {
-  res.render("articles/new", { article: {}, title: "New Article" });
-});
-
-/* POST create article. 
-router.post('/', asyncHandler(async (req, res) => {
-  let article;
-  try {
-    article = await Article.create(req.body);
-    res.redirect("/articles/" + article.id);
-  } catch (error) {
-    if(error.name === "SequelizeValidationError") { // checking the error
-      article = await Article.build(req.body);
-      res.render("articles/new", { article, errors: error.errors, title: "New Article" })
-    } else {
-      throw error;
-    }  
-  };
-}));
-
- */
 
 
 
@@ -123,21 +54,34 @@ router.post('/', asyncHandler(async (req, res) => {
 
 
 /* GET books/:id shows book detail form */
-router.get('/', asyncHandler(async (req, res, next) => {
-  
+router.get('/:id/edit', asyncHandler(async (req, res, next) => {
+  const book = await Book.findByPk(req.params.id);
+  res.render('edit', { book })
 }));
 
 
 /* POST books/:id Updates book info in the database  */
-router.post('/', asyncHandler(async (req, res, next) => {
+router.post('/:id/edit', asyncHandler(async (req, res, next) => {
+  let book = await Book.findByPk(req.params.id);
+  await book.update(req.body);
+  res.redirect('/');
+}));
+
+/* Delete book form. */
+router.get("/:id/delete", asyncHandler(async (req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  res.render("delete", { book });
 
 }));
 
-
-/* POST books/:id/delete Deletes a book. Be careful, this can't be undone. Create a new "test" book to test deleting*/
-router.post('/', asyncHandler(async (req, res, next) => {
-
+/* Delete individual book. */
+router.post('/:id/delete', asyncHandler(async (req ,res) => {
+  const book = await Book.findByPk(req.params.id);
+  await book.destroy();
+  res.redirect("/books");
 }));
+
+
 
 
 
