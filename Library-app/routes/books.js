@@ -15,56 +15,74 @@ function asyncHandler(cb){
   }
 };
 
-
-/* GET Books */
+/* GET all books and render index page */
 router.get('/', asyncHandler(async (req, res, next) => {
   const allBooks = await Book.findAll({ order: [['author', 'ASC']]});
   res.render('index', { title: 'Books', allBooks });
-  // res.json( allBooks.map(singleBook => singleBook.toJSON()));
 }));
 
-
-/* GET books/new shows create new book form*/
+/* GET books/new renders create new-book form */
 router.get('/new', (req, res) => {
   res.render('new-book', { book: {}});
 });
 
 
-/* POST books/new Posts a new book to the database */
+
+
+
+
+
+
+
+
+
+
+
+
+/* POST books/new posts a new book to the database */
 router.post('/new', asyncHandler(async (req, res, next) => {
-  // let book;
-  let book = await Book.create(req.body);
-  res.redirect('/')
-
+  let book;
+  try {
+    book = await Book.create(req.body);
+    res.redirect('/');
+  } catch (error) {
+    if (error.name === "SequelizeValidationError") {
+      book = await Book.build(req.body);
+      res.render('new-book', { book, errors: error.errors });
+    } else {
+      throw error;
+    }
+  };
 }));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* GET books/:id shows book detail form */
-router.get('/:id/edit', asyncHandler(async (req, res, next) => {
+/* GET books/:id shows update-book form */
+router.get('/:id/update', asyncHandler(async (req, res, next) => {
   const book = await Book.findByPk(req.params.id);
-  res.render('edit', { book })
+  res.render('update-book', { book })
 }));
+
+
 
 
 /* POST books/:id Updates book info in the database  */
-router.post('/:id/edit', asyncHandler(async (req, res, next) => {
-  let book = await Book.findByPk(req.params.id);
-  await book.update(req.body);
-  res.redirect('/');
+router.post('/:id/update', asyncHandler(async (req, res, next) => {
+  let book;
+  
+  try {
+    book = await Book.findByPk(req.params.id);
+    await book.update(req.body);
+    res.redirect('/');
+  } catch (error) {
+    if (error.name === "SequelizeValidationError") {
+      book = await Book.build(req.body);
+      res.render('new-book', { book, errors: error.errors });
+    } else {
+
+    };
+
+  };
+  
+
 }));
 
 /* Delete book form. */

@@ -35,6 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/books', books);
 
+
+// 404 Error Handler
 app.use(function(req, res, next) {
   const error = createError(404, 'Sorry! We couldn\'t find the page you were looking for.');
   res.locals.message = error.message;
