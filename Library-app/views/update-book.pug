@@ -2,6 +2,9 @@ extends layout
 
 block content
   h1 Update Book Entry
+
+  include validation-error
+
   form(action=`/books/${book.id}/update`, method="post")
     p
       label(for='title') Title
