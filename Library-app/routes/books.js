@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var { Op } = require('../models').Sequelize;
+const { Op } = require('../models').Sequelize;
 const { Book } = require('../models');
 
 /* Handler function to wrap each route. */
@@ -26,24 +26,12 @@ function asyncHandler(cb){
 router.get('/', asyncHandler(async (req, res, next) => {
   const allBooks = await Book.findAll({ order: [['title', 'ASC']]});
 
-  let numOfPages = Math.ceil(allBooks.length / 5)
+  // let numOfPages = Math.ceil(allBooks.length / 5)
 
-  console.log(numOfPages);
-
-
-
-
+  // console.log(numOfPages);
 
 
   res.render('index', { title: 'Books', allBooks, search: {} });
-
-
-
-
-
-
-
-
 
 }));
 
