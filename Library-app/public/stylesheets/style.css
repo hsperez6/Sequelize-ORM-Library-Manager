@@ -1,6 +1,24 @@
+html, body {
+  height: 100%;
+}
+
+html {
+  display: table;
+  margin: auto;
+}
+
 body {
+  display: table-cell;
+  vertical-align: middle;
   padding: 10px 50px 50px;
   font: 18px "Garamond", serif;
+  background-image: url("../images/library.webp");
+}
+
+.wrapper {
+  background-color: aliceblue;
+  padding: 10px;
+  width: 703px;
 }
 
 a {
