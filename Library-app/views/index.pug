@@ -2,10 +2,11 @@ extends layout
 
 block content
   h1= title
-  a.button(href='./books/new') Create New Book
-  form(action="/books", method="post")
-    input#search(name='search' type='text' value=search.value placeholder='Search...')
-    input(type='submit' value='Search')
+  .container(style='display: flex')
+    a.button(href='./books/new') Create New Book
+    form.search(action="/books", method="post" style='margin-left: 250px')
+      input(name='search' type='text' value=search.value placeholder='Title, author, genre, year' style='width: 200px')
+      input(type='submit' value='Search' style='margin-left: 5px')
   table
     thead
       tr

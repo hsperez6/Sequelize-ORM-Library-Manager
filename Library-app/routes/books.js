@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+var { Op } = require('../models').Sequelize;
+
 const { Book } = require('../models');
 
 /* Handler function to wrap each route. */
@@ -22,10 +24,23 @@ router.get('/', asyncHandler(async (req, res, next) => {
 }));
 
 
-
 /* POST search */
 router.post('/', asyncHandler(async (req, res, next) => {
-  const search = await Book.findAll
+  const searchTerm = req.body.search;
+  
+  const searchResults = await Book.findAll({
+    where: {
+      [Op.or]: [{title: searchTerm}, {author: searchTerm}, {genre: searchTerm}, {year: searchTerm}]
+      // title: {
+      //   [Op.substring]: searchTerm,
+      // }
+    }
+  });
+
+
+  console.log(searchResults.map(result => result.toJSON()));
+  res.render('results', { searchResults });
+
 }));
 
 

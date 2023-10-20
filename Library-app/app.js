@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
 
-  err.message("An error ocurred" || err.message);
+  // err.message("An error ocurred" || err.message);
 
   console.log(err.status, err.message);
 

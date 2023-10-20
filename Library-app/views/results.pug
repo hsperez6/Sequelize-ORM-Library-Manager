@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 Search Results
+  table
+    thead
+      tr
+        th Title
+        th Author
+        th Genre
+        th Year
+    tbody
+      each book in searchResults
+        tr
+          td
+            a(href=`./books/${book.id}/update`) #{book.title}
+          td= book.author 
+          td= book.genre 
+          td= book.year
+  p
+  a.button(href='/books') Back
