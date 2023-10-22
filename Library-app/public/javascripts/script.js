@@ -1,30 +1,4 @@
-
-
-
-// import { Book } from "../../models";
-
 const { Book } = require('../../models');
-
-
-function asyncHandler(cb){
-  return async(req, res, next) => {
-    try {
-      await cb(req, res, next)
-    } catch(error){
-      // Forward error to the global error handler
-      res.status(500).send(error);
-    }
-  }
-};
-
-
-asyncHandler(async (req, res, next) => {
-  const allBooks = await Book.findAll({ order: [['title', 'ASC']]});
-
-
-  console.log(bookList)
-})
-
 
 
 

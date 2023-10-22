@@ -35,23 +35,30 @@ function asyncHandler(cb){
 
 /* GET all books from database and render inside index page */
 router.get('/', asyncHandler(async (req, res, next) => {
-  const allBooks = await Book.findAll({ order: [['title', 'ASC']]});
+  const allBooks = await Book.findAndCountAll({ 
+    order: [['title', 'ASC']],
+    limit: 5,
+  });
+
+
+
+
+
   let bookList = allBooks.map(book => book.toJSON());
 
 
-  let startIndex  = (page * 5) - 5;
-  let endIndex = (page * 5) - 1;
 
+//   let startIndex  = (page * 5) - 5;
+//   let endIndex = (page * 5) - 1;
 
-
-  for (let i=0; i<bookList.length ; i++) {
-    if (i >= startIndex && i < endIndex) {
-       studentList.insertAdjacentHTML(
-          'beforeend',
-          ``
-        );
-    };
- };
+//   for (let i=0; i<bookList.length ; i++) {
+//     if (i >= startIndex && i < endIndex) {
+//        studentList.insertAdjacentHTML(
+//           'beforeend',
+//           ``
+//         );
+//     };
+//  };
 
 
   let numOfPages = Math.ceil(bookList.length / 5);
