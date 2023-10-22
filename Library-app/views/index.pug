@@ -23,5 +23,8 @@ block content
           td= book.genre 
           td= book.year
   .pagination
+    - var n = 1;
     ul#pages
+      while n <= numOfPages
+        li.pagenum= n++
   script(src='/javascripts/script.js')

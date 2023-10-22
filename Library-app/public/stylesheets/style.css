@@ -118,3 +118,14 @@ input[type=text] {
   width: 200px;
   margin-left: 20px;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.pagenum {
+  display: inline-block;
+  justify-content: center;
+  padding: 5px;
+}

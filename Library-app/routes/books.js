@@ -22,18 +22,48 @@ function asyncHandler(cb){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 /* GET all books from database and render inside index page */
 router.get('/', asyncHandler(async (req, res, next) => {
   const allBooks = await Book.findAll({ order: [['title', 'ASC']]});
-
-  // let numOfPages = Math.ceil(allBooks.length / 5)
-
-  // console.log(numOfPages);
+  let bookList = allBooks.map(book => book.toJSON());
 
 
-  res.render('index', { title: 'Books', allBooks, search: {} });
+  let startIndex  = (page * 5) - 5;
+  let endIndex = (page * 5) - 1;
+
+
+
+  for (let i=0; i<bookList.length ; i++) {
+    if (i >= startIndex && i < endIndex) {
+       studentList.insertAdjacentHTML(
+          'beforeend',
+          ``
+        );
+    };
+ };
+
+
+  let numOfPages = Math.ceil(bookList.length / 5);
+
+  res.render('index', { title: 'Books', allBooks, numOfPages, search: {} });
 
 }));
+
+
+
+
+
 
 
 

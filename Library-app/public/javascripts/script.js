@@ -1,6 +1,9 @@
 
-const { Book } = require('../../models');
 
+
+// import { Book } from "../../models";
+
+const { Book } = require('../../models');
 
 
 function asyncHandler(cb){
@@ -18,7 +21,6 @@ function asyncHandler(cb){
 asyncHandler(async (req, res, next) => {
   const allBooks = await Book.findAll({ order: [['title', 'ASC']]});
 
-  let bookList = allBooks.map(book => book.toJSON());
 
   console.log(bookList)
 })
