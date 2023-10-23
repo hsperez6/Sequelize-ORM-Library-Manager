@@ -15,11 +15,6 @@ body {
   background-image: url("../images/library.webp");
 }
 
-.wrapper {
-  background-color: aliceblue;
-  padding: 10px;
-  width: 703px;
-}
 
 a {
   color: #019875;
@@ -114,9 +109,23 @@ input[type=text] {
   color: rgb(236, 15, 15);
 }
 
+
+/* Custom Personalization */
+
+.wrapper {
+  background-color: aliceblue;
+  padding: 10px;
+  width: 680px;
+  height: 460px;
+}
+
 #search {
   width: 200px;
-  margin-left: 20px;
+  margin-left: 100px;
+}
+
+.table {
+  width: 680px;
 }
 
 .pagination {
@@ -127,5 +136,11 @@ input[type=text] {
 .pagenum {
   display: inline-block;
   justify-content: center;
-  padding: 5px;
+  color: white;
+  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 10px 10px 10px;
+  margin: 5px;
+  font-size: 14px;
+  border-radius: 2px;
+  cursor: pointer;
 }

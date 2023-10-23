@@ -16,59 +16,32 @@ function asyncHandler(cb){
   }
 };
 
+/*************************
+* ROUTES 
+**************************/
 
-
-
-
-
-
-
-
-
-
-
-
-/* GET all books from database and render inside index page */
+/* GET redirect to the first page in list pagination */
 router.get('/', asyncHandler(async (req, res, next) => {
   res.redirect('/books/1')
-
 }));
-
-
-
-
 
 /* GET all books from database and render inside index page */
 router.get('/:page', asyncHandler(async (req, res, next) => {
-
+  const pageLimit = 6;
   const pageNum = req.params.page;
   
-  const allBooks = await Book.findAll({
+  const { count, rows } = await Book.findAndCountAll({
     order: [['title', 'ASC']],
-    limit: 5,
-    offset: 5 * (pageNum - 1), 
+    limit: pageLimit,
+    offset: pageLimit * (pageNum - 1), 
   });
 
-  const { dataValues } = allBooks;
+  const bookList = rows.map( book => book.dataValues );
+  const pages = Math.ceil( count / pageLimit );
 
-
-
-  console.log( dataValues );
-
-  // let bookList = rows.map(book => book.dataValues);
-
-  // const pages = Math.ceil(count / 5);
-
-  // res.render('index', { bookList: rows.dataValues, pages, pageNum, search: {} });
+  res.render('index', { bookList, pages, pageNum, search: {} });
   
-  /*
-  const allBooks = await Book.findAll();
-   
-  res.render('index', { title: 'Books', allBooks, search: {} });
-  */
-
 }));
-
 
 /* POST search and render search results*/
 router.post('/', asyncHandler(async (req, res, next) => {
@@ -83,12 +56,11 @@ router.post('/', asyncHandler(async (req, res, next) => {
       ]
     }
   });
-  res.render('results', { searchResults });
+  res.render('results', { searchResults, search: {} });
 }));
 
-
 /* GET books/new renders create new-book form */
-router.get('/new', (req, res) => {
+router.get('/new/create', (req, res) => {
   res.render('new-book', { book: {} });
 });
 

@@ -3,11 +3,11 @@ extends layout
 block content
   h1 Books
   .container(style='display: flex')
-    a.button(href='/books/new') Create New Book
-    form.search(action="/books", method="post" style='margin-left: 250px')
+    a.button(href='/books/new/create') Create New Book
+    form.search(action="/books", method="post" style='margin-left: 225px')
       input(name='search' type='text' value=search.value placeholder='Title, author, genre, year' style='width: 200px')
       input(type='submit' value='Search' style='margin-left: 5px')
-  table
+  table.table
     thead
       tr
         th Title
@@ -15,7 +15,7 @@ block content
         th Genre
         th Year
     tbody
-      each book in allBooks
+      each book in bookList
         tr
           td
             a(href=`/books/update/${book.id}`) #{book.title}
@@ -23,6 +23,8 @@ block content
           td= book.genre 
           td= book.year
   .container
+    - var n = 1;
     ul.pagination
-      li= pages 
-      li= pageNum
+      while n < pages+1
+        li.pagenum
+          a(href="/books/"+n)= n++
