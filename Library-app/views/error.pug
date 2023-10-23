@@ -1,9 +1,9 @@
 extends layout
 
 block content
-  h1 #{title} #{error.status}
+  h1 #{title} #{err.status}
   p= message
   br
   p
     a.button(href='/') Home
-  pre #{error.stack}
+  pre #{err.stack}

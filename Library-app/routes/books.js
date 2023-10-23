@@ -27,20 +27,32 @@ router.get('/', asyncHandler(async (req, res, next) => {
 
 /* GET all books from database and render inside index page */
 router.get('/:page', asyncHandler(async (req, res, next) => {
-  const pageLimit = 6;
+  
   const pageNum = req.params.page;
-  
-  const { count, rows } = await Book.findAndCountAll({
-    order: [['title', 'ASC']],
-    limit: pageLimit,
-    offset: pageLimit * (pageNum - 1), 
-  });
 
-  const bookList = rows.map( book => book.dataValues );
-  const pages = Math.ceil( count / pageLimit );
-
-  res.render('index', { bookList, pages, pageNum, search: {} });
+  if (pageNum === isNaN) {
+    throw error;
+  } else {
+    
+    try {
+      const pageLimit = 6;
+      
+      const { count, rows } = await Book.findAndCountAll({
+        order: [['title', 'ASC']],
+        limit: pageLimit,
+        offset: pageLimit * (pageNum - 1), 
+      });
+    
+      const bookList = rows.map( book => book.dataValues );
+      const pages = Math.ceil( count / pageLimit );
+    
+      res.render('index', { bookList, pages, pageNum, search: {} });
   
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }));
 
 /* POST search and render search results*/
