@@ -28,42 +28,9 @@ function asyncHandler(cb){
 
 
 
-
-
-
-
-
 /* GET all books from database and render inside index page */
 router.get('/', asyncHandler(async (req, res, next) => {
-  const allBooks = await Book.findAndCountAll({ 
-    order: [['title', 'ASC']],
-    limit: 5,
-  });
-
-
-
-
-
-  let bookList = allBooks.map(book => book.toJSON());
-
-
-
-//   let startIndex  = (page * 5) - 5;
-//   let endIndex = (page * 5) - 1;
-
-//   for (let i=0; i<bookList.length ; i++) {
-//     if (i >= startIndex && i < endIndex) {
-//        studentList.insertAdjacentHTML(
-//           'beforeend',
-//           ``
-//         );
-//     };
-//  };
-
-
-  let numOfPages = Math.ceil(bookList.length / 5);
-
-  res.render('index', { title: 'Books', allBooks, numOfPages, search: {} });
+  res.redirect('/books/1')
 
 }));
 
@@ -71,24 +38,36 @@ router.get('/', asyncHandler(async (req, res, next) => {
 
 
 
+/* GET all books from database and render inside index page */
+router.get('/:page', asyncHandler(async (req, res, next) => {
+
+  const pageNum = req.params.page;
+  
+  const allBooks = await Book.findAll({
+    order: [['title', 'ASC']],
+    limit: 5,
+    offset: 5 * (pageNum - 1), 
+  });
+
+  const { dataValues } = allBooks;
 
 
 
+  console.log( dataValues );
 
+  // let bookList = rows.map(book => book.dataValues);
 
+  // const pages = Math.ceil(count / 5);
 
+  // res.render('index', { bookList: rows.dataValues, pages, pageNum, search: {} });
+  
+  /*
+  const allBooks = await Book.findAll();
+   
+  res.render('index', { title: 'Books', allBooks, search: {} });
+  */
 
-
-
-
-
-
-
-
-
-
-
-
+}));
 
 
 /* POST search and render search results*/
@@ -107,9 +86,10 @@ router.post('/', asyncHandler(async (req, res, next) => {
   res.render('results', { searchResults });
 }));
 
+
 /* GET books/new renders create new-book form */
 router.get('/new', (req, res) => {
-  res.render('new-book', { book: {}});
+  res.render('new-book', { book: {} });
 });
 
 /* POST books/new posts a new book to the database */
@@ -129,7 +109,7 @@ router.post('/new', asyncHandler(async (req, res, next) => {
 }));
 
 /* GET books/:id shows update-book form */
-router.get('/:id/update', asyncHandler(async (req, res, next) => {
+router.get('/update/:id', asyncHandler(async (req, res, next) => {
   const book = await Book.findByPk(req.params.id);
   if (book) {
     res.render('update-book', { book })
@@ -139,7 +119,7 @@ router.get('/:id/update', asyncHandler(async (req, res, next) => {
 }));
 
 /* POST books/:id Updates book info in the database  */
-router.post('/:id/update', asyncHandler(async (req, res, next) => {
+router.post('/update/:id', asyncHandler(async (req, res, next) => {
   let book;
   try {
     book = await Book.findByPk(req.params.id);
@@ -161,7 +141,7 @@ router.post('/:id/update', asyncHandler(async (req, res, next) => {
 }));
 
 /* Delete book form. */
-router.get("/:id/delete", asyncHandler(async (req, res) => {
+router.get("/delete/:id", asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if(book) {
     res.render("delete", { book });
@@ -171,7 +151,7 @@ router.get("/:id/delete", asyncHandler(async (req, res) => {
 }));
 
 /* Delete individual book. */
-router.post('/:id/delete', asyncHandler(async (req ,res) => {
+router.post('/delete/:id', asyncHandler(async (req ,res) => {
   const book = await Book.findByPk(req.params.id);
   if(book) {
     await book.destroy();

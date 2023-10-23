@@ -1,9 +1,9 @@
 extends layout
 
 block content
-  h1= title
+  h1 Books
   .container(style='display: flex')
-    a.button(href='./books/new') Create New Book
+    a.button(href='/books/new') Create New Book
     form.search(action="/books", method="post" style='margin-left: 250px')
       input(name='search' type='text' value=search.value placeholder='Title, author, genre, year' style='width: 200px')
       input(type='submit' value='Search' style='margin-left: 5px')
@@ -18,13 +18,11 @@ block content
       each book in allBooks
         tr
           td
-            a(href=`./books/${book.id}/update`) #{book.title}
+            a(href=`/books/update/${book.id}`) #{book.title}
           td= book.author 
           td= book.genre 
           td= book.year
-  .pagination
-    - var n = 1;
-    ul#pages
-      while n <= numOfPages
-        li.pagenum= n++
-  script(src='/javascripts/script.js')
+  .container
+    ul.pagination
+      li= pages 
+      li= pageNum

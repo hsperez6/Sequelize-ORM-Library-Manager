@@ -13,7 +13,7 @@ block content
       each book in searchResults
         tr
           td
-            a(href=`./books/${book.id}/update`) #{book.title}
+            a(href=`./books/update/${book.id}`) #{book.title}
           td= book.author 
           td= book.genre 
           td= book.year
