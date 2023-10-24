@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  h1 #{title} #{err.status}
-  p= err.message
+  h1 Page Not Found #{err.status}
+  p= message
   br
   p
     a.button(href='/') Home

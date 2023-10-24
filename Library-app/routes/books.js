@@ -28,29 +28,25 @@ router.get('/', asyncHandler(async (req, res, next) => {
 /* GET all books from database and render inside index page */
 router.get('/:page', asyncHandler(async (req, res, next) => {
   
-  const pageNum = req.params.page;
+  const pageNum = parseInt(req.params.page);
+  const pageLimit = 6;
 
-  if (pageNum === isNaN) {
-    throw error;
+  const { count, rows } = await Book.findAndCountAll({
+    order: [['title', 'ASC']],
+    limit: pageLimit,
+    offset: pageLimit * (pageNum - 1), 
+  });
+
+  const bookList = rows.map( book => book.dataValues );
+  const pages = Math.ceil( count / pageLimit );
+
+  console.log(bookList.length);
+
+  if (bookList.length > 0) {
+    res.render('index', { bookList, pages, search: {} });  
   } else {
-    
-    try {
-      const pageLimit = 6;
-      
-      const { count, rows } = await Book.findAndCountAll({
-        order: [['title', 'ASC']],
-        limit: pageLimit,
-        offset: pageLimit * (pageNum - 1), 
-      });
-    
-      const bookList = rows.map( book => book.dataValues );
-      const pages = Math.ceil( count / pageLimit );
-    
-      res.render('index', { bookList, pages, pageNum, search: {} });
-  
-    } catch (error) {
-      throw error;
-    }
+    const err = createError(500, 'Sorry! We couldn\'t find the book entry.');
+    next(err);
   }
 
 }));
@@ -98,7 +94,12 @@ router.get('/update/:id', asyncHandler(async (req, res, next) => {
   if (book) {
     res.render('update-book', { book })
   } else {
-    res.sendStatus(404)
+    // res.sendStatus(404)
+    const err = createError(404, 'Sorry! We couldn\'t find the page you were looking for.');
+    res.locals.message = err.message;
+  
+    res.status(err.status);
+    res.render('page-not-found', {err})
   };
 }));
 
