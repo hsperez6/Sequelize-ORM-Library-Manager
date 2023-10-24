@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-
 var { sequelize } = require('./models');
 
 (async () => {
@@ -39,7 +38,6 @@ app.use('/books', books);
 // 404 Error Handler
 app.use(function(req, res, next) {
   const err = createError(404, 'Sorry! We couldn\'t find the page you were looking for.');
-  res.locals.message = err.message;
 
   res.status(err.status);
   res.render('page-not-found', {err})
@@ -48,18 +46,16 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
 
-  // err.message("An error ocurred" || err.message);
-  console.log(err.status, err.message);
+  console.log(err.status);
+  console.log(err.message);
 
   // set locals, only providing error in development
-  // res.locals.message = err.message;
-  // res.locals.err = err;
-  
-  // req.app.get('env') === 'development' ? err : {};
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  // res.status(err.status || 500);
-  // res.render('error', { title: "Internal Server Error", err });
+  res.status(err.status || 500);
+  res.render('error', {title: "Server Error", err});
 });
 
 module.exports = app;

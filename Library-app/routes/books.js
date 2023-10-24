@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+var createError = require('http-errors');
+
 const { Op } = require('../models').Sequelize;
 const { Book } = require('../models');
 
@@ -11,7 +13,9 @@ function asyncHandler(cb){
       await cb(req, res, next)
     } catch(error){
       // Forward error to the global error handler
-      res.status(500).send(error);
+      // res.status(500).send(error)
+      const err = createError(500, 'Sorry! There was an unexpected error on the server.');
+      next(err);
     }
   }
 };
@@ -40,13 +44,11 @@ router.get('/:page', asyncHandler(async (req, res, next) => {
   const bookList = rows.map( book => book.dataValues );
   const pages = Math.ceil( count / pageLimit );
 
-  console.log(bookList.length);
 
   if (bookList.length > 0) {
     res.render('index', { bookList, pages, search: {} });  
   } else {
-    const err = createError(500, 'Sorry! We couldn\'t find the book entry.');
-    next(err);
+    throw error;
   }
 
 }));
@@ -64,7 +66,13 @@ router.post('/', asyncHandler(async (req, res, next) => {
       ]
     }
   });
-  res.render('results', { searchResults, search: {} });
+
+  if(searchResults.length > 0) {
+    res.render('results', { searchResults, search: {} });
+  } else {
+    res.render('noresults', { search: {} });
+  }
+
 }));
 
 /* GET books/new renders create new-book form */
@@ -94,12 +102,7 @@ router.get('/update/:id', asyncHandler(async (req, res, next) => {
   if (book) {
     res.render('update-book', { book })
   } else {
-    // res.sendStatus(404)
-    const err = createError(404, 'Sorry! We couldn\'t find the page you were looking for.');
-    res.locals.message = err.message;
-  
-    res.status(err.status);
-    res.render('page-not-found', {err})
+    throw error;
   };
 }));
 
@@ -112,7 +115,7 @@ router.post('/update/:id', asyncHandler(async (req, res, next) => {
       await book.update(req.body);
       res.redirect('/');
     } else {
-      res.sendStatus(404);
+      throw error;
     };
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
@@ -131,7 +134,7 @@ router.get("/delete/:id", asyncHandler(async (req, res) => {
   if(book) {
     res.render("delete", { book });
   } else {
-    res.sendStatus(404);
+    throw error;
   };
 }));
 
@@ -142,7 +145,7 @@ router.post('/delete/:id', asyncHandler(async (req ,res) => {
     await book.destroy();
     res.redirect("/books");  
   } else {
-    res.sendStatus(404);
+    throw error;
   };
 }));
 

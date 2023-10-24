@@ -7,20 +7,7 @@ block content
     form.search(action="/books", method="post" style='margin-left: 255px')
       input(name='search' type='text' value=search.value placeholder='Title, author, genre, year' style='width: 200px')
       input(type='submit' value='Search' style='margin-left: 5px')  
-  table.table
-    thead
-      tr
-        th Title
-        th Author
-        th Genre
-        th Year
-    tbody
-      each book in searchResults
-        tr
-          td
-            a(href=`./books/update/${book.id}`) #{book.title}
-          td= book.author 
-          td= book.genre 
-          td= book.year
+  .pagination
+    h2.error No books found
   p
   a.button(href='/books') Back
